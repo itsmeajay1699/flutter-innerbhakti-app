@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_revision/service/auth/auth_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_text_styles.dart';
@@ -12,8 +13,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   bool _keyboardVisible = false;
-
-
 
   bool isIndianPhoneNumber(String phone) {
     final pattern = RegExp(r'^[6789]\d{9}$');
@@ -139,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
               left: 16,
               right: 16,
               child: GestureDetector(
-                onTap: () {
+                onTap: () async {
                   context.push('/otp');
                 },
                 child: Container(

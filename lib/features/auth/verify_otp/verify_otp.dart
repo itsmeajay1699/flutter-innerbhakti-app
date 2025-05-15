@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,7 +7,6 @@ class OTPScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(child: OTPForm()),
@@ -24,7 +22,6 @@ class OTPForm extends StatefulWidget {
 }
 
 class _OTPFormState extends State<OTPForm> {
-
   Widget _buildOtpFields() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

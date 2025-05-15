@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_revision/features/onboarding/view/first.dart';
-import 'package:flutter_revision/features/subscription/controller/subscription_controller.dart';
 import 'package:go_router/go_router.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class OfferBannerWithCountdown extends StatefulWidget {
   final Duration duration;
@@ -18,44 +15,6 @@ class OfferBannerWithCountdown extends StatefulWidget {
 class _OfferBannerWithCountdownState extends State<OfferBannerWithCountdown> {
   late Duration _remaining;
   Timer? _timer;
-  Razorpay razorpay = Razorpay();
-
-  final PaymentController _controller = PaymentController();
-  bool _isLoading = false;
-
-  void _startPaymentFlow() async {
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-
-      await _controller.createOrder();
-
-      if (_controller.orderResponse != null) {
-        final orderId = _controller.orderResponse!['order_id'];
-
-        // Then launch Razorpay checkout
-
-        var options = {
-          'key': 'rzp_test_hSpk2hCp8AIBCo',
-          'amount': 499,
-          'name': 'InnerBhakti',
-          'order_id': orderId,
-          'prefill': {'contact': '8700499943', 'email': 'test@example.com'},
-        };
-        razorpay.open(options);
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        // ignore: use_build_context_synchronously
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -121,10 +80,7 @@ class _OfferBannerWithCountdownState extends State<OfferBannerWithCountdown> {
                     context.go('/first');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _isLoading
-                            ? const Color(0xFFEF6920).withOpacity(0.1)
-                            : const Color(0xFFEF6920),
+                    backgroundColor: const Color(0xFFEF6920),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

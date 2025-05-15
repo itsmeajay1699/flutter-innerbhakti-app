@@ -1,94 +1,65 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPreferencesService {
-  static final SharedPreferencesService _instance =
-      SharedPreferencesService._internal();
-  factory SharedPreferencesService() => _instance;
+class StorageService {
+  static final StorageService _instance = StorageService._internal();
+  factory StorageService() => _instance;
+  StorageService._internal();
 
-  SharedPreferences? _prefs;
+  late SharedPreferences _prefs;
 
-  SharedPreferencesService._internal();
-
-  /// Initialize before using the service
+  /// Initialize once (e.g., in main before runApp)
   Future<void> init() async {
-    _prefs ??= await SharedPreferences.getInstance();
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  // ---------------------------
-  // Basic Types
-  // ---------------------------
+  // ------------------ Save ------------------
 
-  Future<void> setString(String key, String value) async {
-    await _prefs?.setString(key, value);
+  Future<void> saveString(String key, String value) async {
+    await _prefs.setString(key, value);
   }
 
-  String? getString(String key) {
-    return _prefs?.getString(key);
+  Future<void> saveInt(String key, int value) async {
+    await _prefs.setInt(key, value);
   }
 
-  Future<void> setInt(String key, int value) async {
-    await _prefs?.setInt(key, value);
+  Future<void> saveBool(String key, bool value) async {
+    await _prefs.setBool(key, value);
   }
 
-  int? getInt(String key) {
-    return _prefs?.getInt(key);
+  Future<void> saveDouble(String key, double value) async {
+    await _prefs.setDouble(key, value);
   }
 
-  Future<void> setBool(String key, bool value) async {
-    await _prefs?.setBool(key, value);
+  Future<void> saveJson(String key, Map<String, dynamic> value) async {
+    await _prefs.setString(key, json.encode(value));
   }
 
-  bool? getBool(String key) {
-    return _prefs?.getBool(key);
-  }
+  // ------------------ Get ------------------
 
-  Future<void> setDouble(String key, double value) async {
-    await _prefs?.setDouble(key, value);
-  }
+  String? getString(String key) => _prefs.getString(key);
 
-  double? getDouble(String key) {
-    return _prefs?.getDouble(key);
-  }
+  int? getInt(String key) => _prefs.getInt(key);
 
-  // ---------------------------
-  // JSON Handling
-  // ---------------------------
+  bool? getBool(String key) => _prefs.getBool(key);
 
-  Future<void> setJson(String key, Map<String, dynamic> jsonMap) async {
-    final jsonString = jsonEncode(jsonMap);
-    await _prefs?.setString(key, jsonString);
-  }
+  double? getDouble(String key) => _prefs.getDouble(key);
 
   Map<String, dynamic>? getJson(String key) {
-    final jsonString = _prefs?.getString(key);
-    if (jsonString == null) return null;
-
-    try {
-      return jsonDecode(jsonString) as Map<String, dynamic>;
-    } catch (e) {
-      return null;
-    }
+    final str = _prefs.getString(key);
+    if (str == null) return null;
+    return json.decode(str);
   }
 
-  dynamic getJsonField(String key, String field) {
-    final json = getJson(key);
-    return json?[field];
-  }
-
-  // ---------------------------
-  // Utility Methods
-  // ---------------------------
+  // ------------------ Utility ------------------
 
   Future<void> remove(String key) async {
-    await _prefs?.remove(key);
+    await _prefs.remove(key);
   }
 
   Future<void> clearAll() async {
-    await _prefs?.clear();
+    await _prefs.clear();
   }
 
-  bool containsKey(String key) {
-    return _prefs?.containsKey(key) ?? false;
-  }
+  bool contains(String key) => _prefs.containsKey(key);
 }

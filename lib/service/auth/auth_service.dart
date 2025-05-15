@@ -1,15 +1,16 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_revision/core/shared_preference/shared_preferences_service.dart';
 
-class AuthService {
+class CheckUserLogin {
   static const String isLoggedInKey = 'is_logged_in';
 
-  static Future<bool> isLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(isLoggedInKey) ?? false;
+  static bool? isLoggedIn() {
+    bool? value = StorageService().getBool(isLoggedInKey);
+    print(value);
+    return value;
   }
 
   static Future<void> setLogin(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(isLoggedInKey, value);
+    final prefs = await StorageService().saveBool(isLoggedInKey, value);
+    return prefs;
   }
 }
